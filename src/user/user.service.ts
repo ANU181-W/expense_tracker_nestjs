@@ -26,5 +26,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-
+  async getuserbyid(id: number) {
+    return await this.userRepository.findOne({ where: { id: id } });
+  }
 }

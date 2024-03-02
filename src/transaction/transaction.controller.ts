@@ -5,9 +5,9 @@ import { Request } from 'express'; // Add this import
 
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/role.guard';
-interface User {
+type UserID = {
   id: number;
-}
+};
 
 @Controller('transaction')
 @UseGuards(AuthGuard('jwt'), new RoleGuard('user'))
@@ -17,19 +17,18 @@ export class TransactionController {
   @Post()
   create(
     @Body() createTransactionDto: CreateTransactionDto,
-    @Req() req: Request & { user: User },
+    @Req() req: Request,
   ) {
-    const { id}: User = req.user;
+    //@ts-ignore
+    const id = req.user.user.id;
     console.log('user_id', id);
-    return this.transactionService.createTransaction(
-      createTransactionDto,
-      id,
-    );
+    return this.transactionService.createTransaction(createTransactionDto, id);
   }
 
   @Get()
-  getalltransactions(@Req() req: Request & { user: User }) {
-    const { id }: User = req.user;
-    return this.transactionService.getalltransactions(id);
+  getalltransactions(@Req() req: Request) {
+    //@ts-ignore
+
+    return this.transactionService.getalltransactions(req.user.user.id);
   }
 }

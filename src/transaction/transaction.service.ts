@@ -43,4 +43,6 @@ export class TransactionService {
     let transactions = await this.Transaction.find({ where: { user: user } });
     return transactions;
   }
+
+  
 }
