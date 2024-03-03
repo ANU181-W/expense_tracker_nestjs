@@ -5,9 +5,9 @@ import { Request } from 'express'; // Add this import
 
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/role.guard';
-type UserID = {
+interface UserDTo {
   id: number;
-};
+}
 
 @Controller('transaction')
 @UseGuards(AuthGuard('jwt'), new RoleGuard('user'))
@@ -26,9 +26,8 @@ export class TransactionController {
   }
 
   @Get()
-  getalltransactions(@Req() req: Request) {
-    //@ts-ignore
-
-    return this.transactionService.getalltransactions(req.user.user.id);
+  getalltransactions(@Req() req: Request & { user: UserDTo }) {
+    const id: number = req.user.id;
+    return this.transactionService.getalltransactions(id);
   }
 }
