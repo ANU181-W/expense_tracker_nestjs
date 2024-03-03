@@ -1,10 +1,13 @@
 import { Controller, Post, Body, Req, UseGuards, Get } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto/create-transaction.dto';
-import { Request } from 'express'; // Add this import
+import { Request } from 'express';
 
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/role.guard';
+import { paymentDto } from './dto/Payment-dto';
+import { EntityManager } from 'typeorm';
+
 interface UserDTo {
   id: number;
 }
@@ -29,5 +32,15 @@ export class TransactionController {
   getalltransactions(@Req() req: Request & { user: UserDTo }) {
     const id: number = req.user.id;
     return this.transactionService.getalltransactions(id);
+  }
+
+  @Post('payment')
+  processPayment(@Req() req: Request, @Body() paymentDto: paymentDto) {
+    //@ts-ignore
+    const userId = req.user.user.id;
+    console.log('user_id', userId);
+
+    //paymentDto.senderId = userId;
+    return this.transactionService.processPayment(paymentDto);
   }
 }
