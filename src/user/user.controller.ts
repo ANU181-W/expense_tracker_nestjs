@@ -16,7 +16,7 @@ export class UserController {
 
   @Get()
   async getalluserbyid(@Req() req: AuthenticatedRequest) {
-    const id = req.user.id;
+    const id = req.user.user.id;
     console.log('user id:', id);
     let users = await this.userService.getuserbyid(id);
     return users;
