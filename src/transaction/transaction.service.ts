@@ -20,8 +20,7 @@ export class TransactionService {
   ) {
     const transaction = new Transaction();
     transaction.amount = CreateTransactionDto.amount;
-    transaction.type = CreateTransactionDto.type;
-    transaction.category = CreateTransactionDto.category;
+    transaction.description = CreateTransactionDto.description;
     transaction.name = CreateTransactionDto.name;
     const user = (transaction.user = await this.UserRepo.findOne({
       where: { id: userId },
@@ -43,6 +42,4 @@ export class TransactionService {
     let transactions = await this.Transaction.find({ where: { user: user } });
     return transactions;
   }
-
-  
 }

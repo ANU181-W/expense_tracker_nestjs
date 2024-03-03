@@ -22,10 +22,7 @@ export class Transaction {
   date: Date;
 
   @Column()
-  type: string;
-
-  @Column()
-  category: string;
+  description: string;
 
   @ManyToOne(() => User, (user) => user.transactions)
   @JoinColumn({ name: 'userId' })

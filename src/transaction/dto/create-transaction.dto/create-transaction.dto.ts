@@ -1,8 +1,6 @@
 export class CreateTransactionDto {
-    amount: number;
-    type: string;
-    category: string;
-    name: string;
-    
+  amount: number;
+  description: string;
 
+  name: string;
 }
