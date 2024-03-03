@@ -1,19 +1,12 @@
 import { Controller, Post, Body, Req, UseGuards, Get } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto/create-transaction.dto';
-import { Request } from 'express';
 
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/role.guard';
 import { paymentDto } from './dto/Payment-dto';
-import { EntityManager } from 'typeorm';
 
-interface AuthenticatedRequest extends Request {
-  user: {
-    [x: string]: any;
-    id: number;
-  }; // Modify this according to your actual user object structure
-}
+import { AuthenticatedRequest } from 'src/Type';
 
 @Controller('transaction')
 @UseGuards(AuthGuard('jwt'), new RoleGuard('user'))
@@ -23,23 +16,22 @@ export class TransactionController {
   @Post()
   create(
     @Body() createTransactionDto: CreateTransactionDto,
-    @Req() req: Request,
+    @Req() req: AuthenticatedRequest,
   ) {
-    //@ts-ignore
-    const id = req.user.user.id;
-    console.log('user_id', id);
+    const { id } = req.user.user;
     return this.transactionService.createTransaction(createTransactionDto, id);
   }
 
   @Get()
-  getalltransactions(@Req() req: Request) {
-    //@ts-ignore
+  getalltransactions(@Req() req: AuthenticatedRequest) {
     return this.transactionService.getalltransactions(req.user.user.id);
   }
 
   @Post('payment')
-  processPayment(@Req() req: Request, @Body() paymentDto: paymentDto) {
-    //@ts-ignore
+  processPayment(
+    @Req() req: AuthenticatedRequest,
+    @Body() paymentDto: paymentDto,
+  ) {
     const userId = req.user.user.id;
 
     paymentDto.senderId = userId;

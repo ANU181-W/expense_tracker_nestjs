@@ -4,9 +4,8 @@ import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/role.guard';
 import { AdminService } from 'src/admin/admin.service';
-export interface User {
-  id: number;
-}
+import { AuthenticatedRequest } from 'src/Type';
+
 @Controller('user')
 @UseGuards(AuthGuard('jwt'), new RoleGuard('user'))
 export class UserController {
@@ -16,10 +15,8 @@ export class UserController {
   ) {}
 
   @Get()
-  async getalluserbyid(@Req() req: Request) {
-    //@ts-ignore
-
-    const id = req.user.user.id;
+  async getalluserbyid(@Req() req: AuthenticatedRequest) {
+    const id = req.user.id;
     console.log('user id:', id);
     let users = await this.userService.getuserbyid(id);
     return users;
