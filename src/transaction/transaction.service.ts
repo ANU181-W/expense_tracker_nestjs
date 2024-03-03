@@ -6,7 +6,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Transaction, EntityManager } from 'typeorm';
 import { User } from 'src/Entities/user.entity';
 import { BadRequestException } from '@nestjs/common';
-import { paymentDto } from './dto/Payment-dto'; // Fix: Correct the path to the payment.dto file
+import { paymentDto } from './dto/Payment-dto'; 
+import { UserTransaction } from 'src/Entities/usertransaction';
+//extract id from sender object
+
+
+
 
 @Injectable()
 export class TransactionService {
@@ -15,7 +20,8 @@ export class TransactionService {
     private readonly Transaction: Repository<TransactionEntity>,
     @InjectRepository(User)
     private readonly UserRepo: Repository<User>,
-
+    @InjectRepository(UserTransaction)
+    private readonly UserTransaction: Repository<UserTransaction>,
   ) {}
 
   async createTransaction(
@@ -54,7 +60,7 @@ export class TransactionService {
   }
 
   async processPayment(paymentDto: paymentDto) {
-    const { senderId,amount, receiverId, description } = paymentDto;
+    const { senderId, amount, receiverId, description } = paymentDto;
 
     try {
       await this.UserRepo.manager.transaction(async (manager) => {
@@ -74,12 +80,30 @@ export class TransactionService {
         await manager.save(sender);
         await manager.save(receiver);
 
-       
+        const transaction = new UserTransaction();
+        transaction.amount = amount;
+        transaction.description = description;
+        //@ts-ignore
+        transaction.sender = sender.id;
+        //@ts-ignore
+        transaction.receiver = receiver.id;
+        console.log(sender.id, ':sender');
+        console.log(receiver.id, ':receiver');
+        await manager.save(transaction);
       });
     } catch (error) {
       throw new BadRequestException('payment failed');
     }
 
     return { message: 'payment successful' };
+  }
+
+  async getallusertransactions(userId: number) {
+    let user = await this.UserRepo.findOne({ where: { id: userId } });
+    let transactions = await this.UserTransaction.find({
+      where: { sender: user },
+    });
+
+    return transactions;
   }
 }

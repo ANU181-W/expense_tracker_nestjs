@@ -10,6 +10,7 @@ import { AuthModule } from './Auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { AdminModule } from './admin/admin.module';
+import { UserTransaction } from './Entities/usertransaction';
 
 
 @Module({
@@ -21,7 +22,7 @@ import { AdminModule } from './admin/admin.module';
       username: 'root',
       password: '1234',
       database: 'transaction_db',
-      entities: [User, TransactionEntity],
+      entities: [User, TransactionEntity,UserTransaction],
       synchronize: true,
       //dropSchema: true,
     }),
