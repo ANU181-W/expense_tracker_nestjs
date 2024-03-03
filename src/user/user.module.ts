@@ -6,6 +6,7 @@ import { User } from 'src/Entities/user.entity';
 import { TransactionEntity } from 'src/Entities/transaction.entity';
 import { LocalStrategy } from 'src/Auth/local.strategy';
 import { UserTransaction } from 'src/Entities/usertransaction';
+import { AdminModule } from 'src/admin/admin.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserTransaction } from 'src/Entities/usertransaction';
       LocalStrategy,
       UserTransaction,
     ]),
+    AdminModule,
   ],
   controllers: [UserController],
   providers: [UserService],

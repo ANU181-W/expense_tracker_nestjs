@@ -10,8 +10,9 @@ import { EntityManager } from 'typeorm';
 
 interface AuthenticatedRequest extends Request {
   user: {
-    [x: string]: any; id: number 
-}; // Modify this according to your actual user object structure
+    [x: string]: any;
+    id: number;
+  }; // Modify this according to your actual user object structure
 }
 
 @Controller('transaction')
