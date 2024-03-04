@@ -8,7 +8,7 @@ import { User } from 'src/Entities/user.entity';
 import { BadRequestException } from '@nestjs/common';
 import { paymentDto } from './dto/Payment-dto';
 import { UserTransaction } from 'src/Entities/usertransaction';
-//extract id from sender object
+
 
 @Injectable()
 export class TransactionService {
@@ -88,8 +88,8 @@ export class TransactionService {
         transaction.Senderstatus = 'Debited';
       }
 
-      const senderName = sender.name;
-      transaction.name = senderName;
+      const receiverName = receiver.name;
+      transaction.name = receiverName;
 
       await manager.save(transaction);
     });
