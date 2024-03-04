@@ -4,7 +4,6 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  Decimal128,
 } from 'typeorm';
 import { User } from './user.entity';
 @Entity()

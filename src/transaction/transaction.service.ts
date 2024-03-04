@@ -6,12 +6,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Transaction, EntityManager } from 'typeorm';
 import { User } from 'src/Entities/user.entity';
 import { BadRequestException } from '@nestjs/common';
-import { paymentDto } from './dto/Payment-dto'; 
+import { paymentDto } from './dto/Payment-dto';
 import { UserTransaction } from 'src/Entities/usertransaction';
 //extract id from sender object
-
-
-
 
 @Injectable()
 export class TransactionService {
@@ -61,39 +58,41 @@ export class TransactionService {
 
   async processPayment(paymentDto: paymentDto) {
     const { senderId, amount, receiverId, description } = paymentDto;
+    const isReceived = true;
+    const isSent = true;
+    await this.UserRepo.manager.transaction(async (manager) => {
+      const sender = await this.getUserById(senderId, manager);
+      const receiver = await this.getUserById(receiverId, manager);
+      if (!sender || !receiver) {
+        throw new BadRequestException('Invalid sender or receiver');
+      }
 
-    try {
-      await this.UserRepo.manager.transaction(async (manager) => {
-        const sender = await this.getUserById(senderId, manager);
-        const receiver = await this.getUserById(receiverId, manager);
-        if (!sender || !receiver) {
-          throw new BadRequestException('Invalid sender or receiver');
-        }
+      if (sender.balance < amount) {
+        throw new Error('Insufficient balance');
+      }
 
-        if (sender.balance < amount) {
-          throw new Error('Insufficient balance');
-        }
+      sender.balance -= amount;
+      receiver.balance += amount;
 
-        sender.balance -= amount;
-        receiver.balance += amount;
+      await manager.save(sender);
+      await manager.save(receiver);
+      const transaction = new UserTransaction();
+      transaction.amount = amount;
+      transaction.description = description;
 
-        await manager.save(sender);
-        await manager.save(receiver);
+      transaction.sender = sender;
 
-        const transaction = new UserTransaction();
-        transaction.amount = amount;
-        transaction.description = description;
-        //@ts-ignore
-        transaction.sender = sender.id;
-        //@ts-ignore
-        transaction.receiver = receiver.id;
-        console.log(sender.id, ':sender');
-        console.log(receiver.id, ':receiver');
-        await manager.save(transaction);
-      });
-    } catch (error) {
-      throw new BadRequestException('payment failed');
-    }
+      transaction.receiver = receiver;
+      if (isReceived && isSent) {
+        transaction.Receiverstatus = 'Credited';
+        transaction.Senderstatus = 'Debited';
+      }
+
+      const senderName = sender.name;
+      transaction.name = senderName;
+
+      await manager.save(transaction);
+    });
 
     return { message: 'payment successful' };
   }

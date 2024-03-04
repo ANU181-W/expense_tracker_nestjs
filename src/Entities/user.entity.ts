@@ -25,10 +25,11 @@ export class User {
   @OneToMany(() => TransactionEntity, (transaction) => transaction.user)
   transactions: TransactionEntity[];
 
-  @OneToMany(() => UserTransaction, transaction => transaction.sender)
+  @OneToMany(() => UserTransaction, (transaction) => transaction.sender)
   sentTransactions: UserTransaction[];
 
-  @OneToMany(() => UserTransaction, transaction => transaction.receiver)
-  receivedTransactions: UserTransaction[];
+  @OneToMany(() => UserTransaction, (transaction) => transaction.receiver)
+receivedTransactions: UserTransaction[];
 
+  
 }

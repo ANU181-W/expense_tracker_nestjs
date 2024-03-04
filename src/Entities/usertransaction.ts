@@ -1,5 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+
+} from 'typeorm';
 import { User } from './user.entity';
+
 
 @Entity()
 export class UserTransaction {
@@ -10,15 +17,23 @@ export class UserTransaction {
   amount: number;
 
   @Column()
-  description: string;
+  name: string;
 
   @ManyToOne(() => User, (user) => user.sentTransactions)
   sender: User;
-  senderName: string;
 
   @ManyToOne(() => User, (user) => user.receivedTransactions)
   receiver: User;
-  receiverName: string;
 
-  // You can add more properties like timestamp, description, etc.
+  @Column()
+  description: string;
+
+  
+  @Column()
+  Receiverstatus: string;
+
+ 
+  @Column()
+  Senderstatus: string;
+ 
 }

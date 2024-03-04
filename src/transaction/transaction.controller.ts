@@ -41,8 +41,7 @@ export class TransactionController {
   @Get('/usertouser')
   async usertouser(@Req() req: AuthenticatedRequest) {
     const userId = req.user.user.id;
-    console.log('user_id', userId);
-    //console.log('user_id', userId);
+   
     return this.transactionService.getallusertransactions(userId);
   }
 }

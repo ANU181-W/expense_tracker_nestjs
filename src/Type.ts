@@ -4,4 +4,7 @@ export interface AuthenticatedRequest extends Request {
       id: number;
     };
   };
+
+  
 }
+
