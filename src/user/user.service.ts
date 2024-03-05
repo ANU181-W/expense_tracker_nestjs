@@ -30,5 +30,11 @@ export class UserService {
     return await this.userRepository.findOne({ where: { id: id } });
   }
 
-  
+  async searchusers(keyword: string) {
+    const users = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.name like :keyword', { keyword: `%${keyword}%` })
+      .getMany();
+    return users;
+  }
 }

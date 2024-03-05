@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 
 import { AuthGuard } from '@nestjs/passport';
@@ -29,6 +29,13 @@ export class UserController {
 
     let users = await this.adminservice.getallusers(id);
 
+    return users;
+  }
+
+  @Get('/search')
+  async searchusers(@Query('keyword') keyword: string) {
+    let users = await this.userService.searchusers(keyword);
+    console.log(users);
     return users;
   }
 }

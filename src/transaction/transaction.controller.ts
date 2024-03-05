@@ -29,12 +29,11 @@ export class TransactionController {
 
   @Post('payment')
   processPayment(
-
     @Req() req: AuthenticatedRequest,
     @Body() paymentDto: paymentDto,
   ) {
     const userId = req.user.user.id;
-
+    console.log('user id', userId);
     paymentDto.senderId = userId;
     return this.transactionService.processPayment(paymentDto);
   }
@@ -42,8 +41,7 @@ export class TransactionController {
   @Get('/usertouser')
   async usertouser(@Req() req: AuthenticatedRequest) {
     const userId = req.user.user.id;
-    
-   
+
     return this.transactionService.getallusertransactions(userId);
   }
 }

@@ -8,6 +8,7 @@ import { User } from 'src/Entities/user.entity';
 import { BadRequestException } from '@nestjs/common';
 import { paymentDto } from './dto/Payment-dto';
 import { UserTransaction } from 'src/Entities/usertransaction';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class TransactionService {
