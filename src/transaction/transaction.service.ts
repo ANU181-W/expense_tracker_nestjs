@@ -102,6 +102,11 @@ export class TransactionService {
     let transactions = await this.UserTransaction.find({
       where: { sender: user },
     });
+    transactions = await this.UserTransaction.find({
+      order: {
+        id: 'DESC',
+      },
+    });
     return transactions;
   }
 }
