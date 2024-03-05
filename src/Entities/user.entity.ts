@@ -7,10 +7,10 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -29,7 +29,5 @@ export class User {
   sentTransactions: UserTransaction[];
 
   @OneToMany(() => UserTransaction, (transaction) => transaction.receiver)
-receivedTransactions: UserTransaction[];
-
-  
+  receivedTransactions: UserTransaction[];
 }

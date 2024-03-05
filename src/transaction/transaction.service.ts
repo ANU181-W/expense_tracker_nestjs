@@ -9,7 +9,6 @@ import { BadRequestException } from '@nestjs/common';
 import { paymentDto } from './dto/Payment-dto';
 import { UserTransaction } from 'src/Entities/usertransaction';
 
-
 @Injectable()
 export class TransactionService {
   constructor(
@@ -102,7 +101,6 @@ export class TransactionService {
     let transactions = await this.UserTransaction.find({
       where: { sender: user },
     });
-
     return transactions;
   }
 }

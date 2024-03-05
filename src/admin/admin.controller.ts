@@ -1,7 +1,16 @@
-import { Controller, Post, Body, Param, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Param,
+  Get,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { RoleGuard } from 'src/role.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { AuthenticatedRequest } from 'src/Type';
 
 type Amount = {
   amount: number;
@@ -24,8 +33,9 @@ export class AdminController {
   }
 
   @Get()
-  async getallusers() {
-    let users = await this.adminService.getallusers();
+  async getallusers(@Req() req: AuthenticatedRequest) {
+    const id = req.user.user.id;
+    let users = await this.adminService.getallusers(id);
     return users;
   }
 }

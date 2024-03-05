@@ -23,8 +23,12 @@ export class UserController {
   }
 
   @Get('/all')
-  async getallusers() {
-    let users = await this.adminservice.getallusers();
+  async getallusers(@Req() req: AuthenticatedRequest) {
+    const id = req.user.user.id;
+    console.log('user id:', id);
+
+    let users = await this.adminservice.getallusers(id);
+
     return users;
   }
 }

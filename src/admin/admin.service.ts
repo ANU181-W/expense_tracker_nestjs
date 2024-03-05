@@ -26,8 +26,12 @@ export class AdminService {
     return user;
   }
 
-  async getallusers() {
+  async getallusers(userid: number) {
     let users = await this.userRepository.find({ where: { role: 'user' } });
+
+    users = users.filter((user) => user.id !== userid);
+
+    console.log(users, userid, 'users');
     return users;
   }
 }
