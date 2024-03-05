@@ -34,6 +34,7 @@ export class AppController {
     const tokken = await this.authService.generateToken(user);
 
     return { token: tokken, role: user.role };
+    
   }
 
   @Post('/register')

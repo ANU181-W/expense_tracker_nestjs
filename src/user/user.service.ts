@@ -4,7 +4,7 @@ import { User } from 'src/Entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-let saltRounds = 10;
+
 @Injectable()
 export class UserService {
   constructor(
@@ -17,6 +17,7 @@ export class UserService {
   }
 
   async createuser(CreateUserDto: CreateUserDto) {
+    let saltRounds:number = 10;
     let user = new User();
     user.email = CreateUserDto.email;
     user.password = await bcrypt.hash(CreateUserDto.password, saltRounds);
