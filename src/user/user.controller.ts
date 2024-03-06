@@ -39,6 +39,7 @@ export class UserController {
   ) {
     const id = req.user.user.id;
     let users = await this.userService.searchusers(id, keyword);
+    console.log(keyword);
 
     console.log(users);
     return users;

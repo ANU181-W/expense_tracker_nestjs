@@ -38,6 +38,8 @@ export class UserService {
       .where('user.name like :keyword', { keyword: `%${keyword}%` })
       .getMany();
 
-    return users.filter((user) => user.id !== id.id);
+    
+    const Users = users.filter((user) => user.role !== 'admin' && user.id !== id.id);
+    return Users;
   }
 }
