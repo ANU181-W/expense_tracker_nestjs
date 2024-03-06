@@ -33,8 +33,13 @@ export class UserController {
   }
 
   @Get('/search')
-  async searchusers(@Query('keyword') keyword: string) {
-    let users = await this.userService.searchusers(keyword);
+  async searchusers(
+    @Req() req: AuthenticatedRequest,
+    @Query('keyword') keyword: string,
+  ) {
+    const id = req.user.user.id;
+    let users = await this.userService.searchusers(id, keyword);
+
     console.log(users);
     return users;
   }

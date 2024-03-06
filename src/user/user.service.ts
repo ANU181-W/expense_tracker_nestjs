@@ -17,7 +17,7 @@ export class UserService {
   }
 
   async createuser(CreateUserDto: CreateUserDto) {
-    let saltRounds:number = 10;
+    let saltRounds: number = 10;
     let user = new User();
     user.email = CreateUserDto.email;
     user.password = await bcrypt.hash(CreateUserDto.password, saltRounds);
@@ -31,11 +31,13 @@ export class UserService {
     return await this.userRepository.findOne({ where: { id: id } });
   }
 
-  async searchusers(keyword: string) {
+  async searchusers(userid: number, keyword: string) {
+    const id = await this.userRepository.findOne({ where: { id: userid } });
     const users = await this.userRepository
       .createQueryBuilder('user')
       .where('user.name like :keyword', { keyword: `%${keyword}%` })
       .getMany();
-    return users;
+
+    return users.filter((user) => user.id !== id.id);
   }
 }
