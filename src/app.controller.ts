@@ -34,20 +34,28 @@ export class AppController {
     const tokken = await this.authService.generateToken(user);
 
     return { token: tokken, role: user.role };
-    
   }
 
   @Post('/register')
-  async register(@Body() CreateUserDto: CreateUserDto) {
-    const user = await this.userService.getuser(CreateUserDto.email);
-    console.log('appcontrollerregisteruser', user);
-    if (user == null) {
-      let newUser = await this.userService.createuser(CreateUserDto);
-      console.log('appcontrollerregisternewuser', newUser);
-      // delete newUser.password;
-      return newUser;
-    } else {
-      return 'User already exists';
+  async register(@Request() req, @Body() CreateUserDto: CreateUserDto) {
+    try {
+      const user = await this.userService.getuser(CreateUserDto.email);
+      console.log('appcontrollerregisteruser', user);
+      if(user) {
+        return { message: 'User already exists' };
+      }
+      if (user == null) {
+        let newUser = await this.userService.createuser(CreateUserDto);
+        console.log('appcontrollerregisternewuser', newUser);
+        delete newUser.password;
+
+        // const user = "dbhfgijdebgjhd";
+        const tokken = await this.authService.generateToken(newUser);
+        console.log('appcontrollerregistertoken', tokken);
+        return { token: tokken, role: newUser.role, newUser };
+      }
+    } catch (error) {
+      console.log('user already exists');
     }
   }
 }
