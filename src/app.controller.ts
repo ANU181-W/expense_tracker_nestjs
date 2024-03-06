@@ -24,13 +24,10 @@ export class AppController {
   @Post('/login')
   @UseGuards(AuthGuard('local'))
   async login(@Request() req) {
-    console.log('appcontrollerlogin', req.user);
     let user = req.user;
 
-    // remove user.password;
     delete user.password;
 
-    // const user = "dbhfgijdebgjhd";
     const tokken = await this.authService.generateToken(user);
 
     return { token: tokken, role: user.role };
@@ -40,22 +37,21 @@ export class AppController {
   async register(@Request() req, @Body() CreateUserDto: CreateUserDto) {
     try {
       const user = await this.userService.getuser(CreateUserDto.email);
-      console.log('appcontrollerregisteruser', user);
-      if(user) {
+
+      if (user) {
         return { message: 'User already exists' };
       }
       if (user == null) {
         let newUser = await this.userService.createuser(CreateUserDto);
-        console.log('appcontrollerregisternewuser', newUser);
+
         delete newUser.password;
 
-        // const user = "dbhfgijdebgjhd";
         const tokken = await this.authService.generateToken(newUser);
-        console.log('appcontrollerregistertoken', tokken);
+
         return { token: tokken, role: newUser.role, newUser };
       }
     } catch (error) {
-      console.log('user already exists');
+      console.log('cannot register user');
     }
   }
 }

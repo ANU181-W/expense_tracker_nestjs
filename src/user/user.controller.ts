@@ -1,10 +1,9 @@
-import { Controller, Get, Req, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, UseGuards, Query, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/role.guard';
 import { AdminService } from 'src/admin/admin.service';
-import { AuthenticatedRequest } from 'src/Type';
 
 @Controller('user')
 @UseGuards(AuthGuard('jwt'), new RoleGuard('user'))
@@ -15,7 +14,7 @@ export class UserController {
   ) {}
 
   @Get()
-  async getalluserbyid(@Req() req: AuthenticatedRequest) {
+  async getalluserbyid(@Request() req) {
     const id = req.user.user.id;
     console.log('user id:', id);
     let users = await this.userService.getuserbyid(id);
@@ -23,7 +22,7 @@ export class UserController {
   }
 
   @Get('/all')
-  async getallusers(@Req() req: AuthenticatedRequest) {
+  async getallusers(@Request() req) {
     const id = req.user.user.id;
     console.log('user id:', id);
 
@@ -33,10 +32,7 @@ export class UserController {
   }
 
   @Get('/search')
-  async searchusers(
-    @Req() req: AuthenticatedRequest,
-    @Query('keyword') keyword: string,
-  ) {
+  async searchusers(@Request() req, @Query('keyword') keyword: string) {
     const id = req.user.user.id;
     let users = await this.userService.searchusers(id, keyword);
 

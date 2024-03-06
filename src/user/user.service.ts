@@ -17,13 +17,13 @@ export class UserService {
   }
 
   async createuser(CreateUserDto: CreateUserDto) {
-    let saltRounds: number = 10;
+    let saltRounds = 10;
     let user = new User();
     user.email = CreateUserDto.email;
     user.password = await bcrypt.hash(CreateUserDto.password, saltRounds);
     user.role = CreateUserDto.role;
     user.name = CreateUserDto.name;
-    console.log(user);
+
     return await this.userRepository.save(user);
   }
 
@@ -38,8 +38,9 @@ export class UserService {
       .where('user.name like :keyword', { keyword: `%${keyword}%` })
       .getMany();
 
-    
-    const Users = users.filter((user) => user.role !== 'admin' && user.id !== id.id);
+    const Users = users.filter(
+      (user) => user.role !== 'admin' && user.id !== id.id,
+    );
     return Users;
   }
 }

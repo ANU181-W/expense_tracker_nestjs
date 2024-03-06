@@ -13,9 +13,6 @@ export class AdminService {
     const amt = (await this.userRepository.findOne({ where: { id: id } }))
       .balance;
 
-    console.log(id);
-
-    console.log(amount, amt);
     const user = await this.userRepository.update(
       {
         id,
