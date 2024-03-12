@@ -124,4 +124,15 @@ export class TransactionService {
       .getMany();
     return transactions;
   }
+
+  async paginateexpenses(userId: number, pageno: number, pagesize: number) {
+    const skip = (pageno - 1) * pagesize;
+    const transactions = await this.Transaction.createQueryBuilder('transaction')
+      .where('transaction.userId = :userId', { userId: userId })
+      .orderBy('transaction.id', 'DESC')
+      .skip(skip)
+      .take(pagesize)
+      .getMany();
+    return transactions;
+  }
 }

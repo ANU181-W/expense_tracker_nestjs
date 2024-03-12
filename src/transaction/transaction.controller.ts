@@ -43,7 +43,7 @@ export class TransactionController {
     return this.transactionService.getallusertransactions(userId);
   }
 
-  @Get('/pagination')
+  @Get('/pagination/usertouser')
   async pagination(@Request() req) {
     const userId = req.user.user.id;
 
@@ -56,7 +56,22 @@ export class TransactionController {
         page,
         pagesize,
       );
-     
+
+    return transactions;
+  }
+  @Get('/pagination/expenses')
+  async paginationexpenses(@Request() req) {
+    const userId = req.user.user.id;
+
+    const page = req.query.page || 1;
+    const pagesize = req.query.pagesize || 5;
+
+    const transactions = await this.transactionService.paginateexpenses(
+      userId,
+      page,
+      pagesize,
+    );
+
     return transactions;
   }
 }
