@@ -32,7 +32,7 @@ export class TransactionController {
   @Post('payment')
   processPayment(@Request() req, @Body() paymentDto: paymentDto) {
     const userId = req.user.user.id;
-    
+
     paymentDto.senderId = userId;
     return this.transactionService.processPayment(paymentDto);
   }
@@ -41,5 +41,22 @@ export class TransactionController {
   async usertouser(@Request() req) {
     const userId = req.user.user.id;
     return this.transactionService.getallusertransactions(userId);
+  }
+
+  @Get('/pagination')
+  async pagination(@Request() req) {
+    const userId = req.user.user.id;
+
+    const page = req.query.page || 1;
+    const pagesize = req.query.pagesize || 5;
+
+    const transactions =
+      await this.transactionService.paginateusertousertransactions(
+        userId,
+        page,
+        pagesize,
+      );
+     
+    return transactions;
   }
 }

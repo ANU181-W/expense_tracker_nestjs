@@ -3,7 +3,7 @@ import { CreateTransactionDto } from './dto/create-transaction.dto/create-transa
 import { TransactionEntity } from 'src/Entities/transaction.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Repository, EntityManager } from 'typeorm';
+import { Repository, EntityManager, createQueryBuilder } from 'typeorm';
 import { User } from 'src/Entities/user.entity';
 import { BadRequestException } from '@nestjs/common';
 import { paymentDto } from './dto/Payment-dto';
@@ -98,17 +98,30 @@ export class TransactionService {
 
   async getallusertransactions(userId: number) {
     let user = await this.UserRepo.findOne({ where: { id: userId } });
-    console.log(user.id);
-    let transactions = await this.UserTransaction.find({
-      where: { sender: user },
-    });
 
-    transactions = await this.UserTransaction.find({
+    let transactions = await this.UserTransaction.find({
       where: { sender: user },
       order: {
         id: 'DESC',
       },
     });
+    return transactions;
+  }
+
+  async paginateusertousertransactions(
+    userId: number,
+    pageno: number,
+    pagesize: number,
+  ) {
+    const skip = (pageno - 1) * pagesize;
+    const transactions = await this.UserTransaction.createQueryBuilder(
+      'usertransaction',
+    )
+      .where('usertransaction.senderId = :senderId', { senderId: userId })
+      .orderBy('usertransaction.id', 'DESC')
+      .skip(skip)
+      .take(pagesize)
+      .getMany();
     return transactions;
   }
 }

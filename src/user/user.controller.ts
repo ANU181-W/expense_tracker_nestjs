@@ -16,7 +16,7 @@ export class UserController {
   @Get()
   async getalluserbyid(@Request() req) {
     const id = req.user.user.id;
-    console.log('user id:', id);
+
     let users = await this.userService.getuserbyid(id);
     return users;
   }
@@ -24,7 +24,6 @@ export class UserController {
   @Get('/all')
   async getallusers(@Request() req) {
     const id = req.user.user.id;
-    console.log('user id:', id);
 
     let users = await this.adminservice.getallusers(id);
 
@@ -36,7 +35,6 @@ export class UserController {
     const id = req.user.user.id;
     let users = await this.userService.searchusers(id, keyword);
 
-    console.log(users);
     return users;
   }
 }
